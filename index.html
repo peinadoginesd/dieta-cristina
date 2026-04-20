@@ -378,6 +378,58 @@ input[type="radio"] { display: none; }
   opacity: 0.9;
 }
 
+/* ===== GYM SUB-TABS ===== */
+.gym-tabs-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 4px 0 16px;
+  margin-bottom: 4px;
+}
+.gym-tabs-bar::-webkit-scrollbar { display: none; }
+
+.gym-tabs-bar label {
+  padding: 8px 14px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+  background: var(--white);
+  border-radius: 24px;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1.5px solid var(--pink-light);
+}
+
+.gym-tabs-bar label:hover { border-color: var(--pink); color: var(--pink); }
+
+#gym-lun:checked ~ .gym-tabs-bar label[for="gym-lun"],
+#gym-mar:checked ~ .gym-tabs-bar label[for="gym-mar"],
+#gym-mie:checked ~ .gym-tabs-bar label[for="gym-mie"],
+#gym-jue:checked ~ .gym-tabs-bar label[for="gym-jue"],
+#gym-vie:checked ~ .gym-tabs-bar label[for="gym-vie"],
+#gym-finde:checked ~ .gym-tabs-bar label[for="gym-finde"] {
+  background: var(--pink);
+  color: var(--white);
+  border-color: var(--pink);
+}
+
+.gym-day-content { display: none; }
+
+#gym-lun:checked ~ .gym-lun-content,
+#gym-mar:checked ~ .gym-mar-content,
+#gym-mie:checked ~ .gym-mie-content,
+#gym-jue:checked ~ .gym-jue-content,
+#gym-vie:checked ~ .gym-vie-content,
+#gym-finde:checked ~ .gym-finde-content {
+  display: block;
+}
+
 /* ===== GYM ===== */
 .gym-day {
   background: var(--white);
@@ -1519,9 +1571,25 @@ input[type="radio"] { display: none; }
     <strong>🧘 Estiramientos (5-10 min):</strong> Al final de cada sesión, estirar los músculos trabajados (15-20s por estiramiento, sin rebotes).
   </div>
 
+  <input type="radio" name="gym-day" id="gym-lun" checked>
+  <input type="radio" name="gym-day" id="gym-mar">
+  <input type="radio" name="gym-day" id="gym-mie">
+  <input type="radio" name="gym-day" id="gym-jue">
+  <input type="radio" name="gym-day" id="gym-vie">
+  <input type="radio" name="gym-day" id="gym-finde">
+
+  <div class="gym-tabs-bar">
+    <label for="gym-lun">💪 Lun</label>
+    <label for="gym-mar">🦵 Mar</label>
+    <label for="gym-mie">🏠 Mié</label>
+    <label for="gym-jue">🔙 Jue</label>
+    <label for="gym-vie">🏠 Vie</label>
+    <label for="gym-finde">😴 S-D</label>
+  </div>
+
   <!-- Lunes -->
+  <div class="gym-day-content gym-lun-content">
   <div class="gym-day">
-    <span class="gym-badge">Lunes</span>
     <h2>💪 Pecho + Tríceps</h2>
     <p class="gym-subtitle">Gym · 22:00–23:00</p>
     <ul class="exercise-list">
@@ -1551,10 +1619,11 @@ input[type="radio"] { display: none; }
       </li>
     </ul>
   </div>
+  </div>
 
   <!-- Martes -->
+  <div class="gym-day-content gym-mar-content">
   <div class="gym-day">
-    <span class="gym-badge">Martes</span>
     <h2>🦵 Pierna (Gym)</h2>
     <p class="gym-subtitle">Gym · 22:00–23:00</p>
     <ul class="exercise-list">
@@ -1584,10 +1653,11 @@ input[type="radio"] { display: none; }
       </li>
     </ul>
   </div>
+  </div>
 
   <!-- Miércoles -->
+  <div class="gym-day-content gym-mie-content">
   <div class="gym-day">
-    <span class="gym-badge" style="background:var(--pink-light); color:var(--text-med);">Miércoles</span>
     <h2>🏠 Pierna en Casa (Opcional)</h2>
     <p class="gym-subtitle">En casa · horario flexible</p>
     <ul class="exercise-list">
@@ -1610,10 +1680,11 @@ input[type="radio"] { display: none; }
     </ul>
     <div class="gym-note">💡 Puedes usar mancuernas o botellas de agua para añadir resistencia. Si estás cansada, descansa.</div>
   </div>
+  </div>
 
   <!-- Jueves -->
+  <div class="gym-day-content gym-jue-content">
   <div class="gym-day">
-    <span class="gym-badge">Jueves</span>
     <h2>🔙 Espalda + Bíceps + Hombro</h2>
     <p class="gym-subtitle">Gym · 22:00–23:00</p>
     <ul class="exercise-list">
@@ -1647,10 +1718,11 @@ input[type="radio"] { display: none; }
       </li>
     </ul>
   </div>
+  </div>
 
   <!-- Viernes -->
+  <div class="gym-day-content gym-vie-content">
   <div class="gym-day">
-    <span class="gym-badge" style="background:var(--pink-light); color:var(--text-med);">Viernes</span>
     <h2>💪 Brazos en Casa (Opcional)</h2>
     <p class="gym-subtitle">En casa · horario flexible</p>
     <ul class="exercise-list">
@@ -1677,11 +1749,14 @@ input[type="radio"] { display: none; }
     </ul>
     <div class="gym-note">💡 Usa mancuernas ligeras o botellas. Céntrate en la técnica y la contracción.</div>
   </div>
+  </div>
 
   <!-- Fin de semana -->
+  <div class="gym-day-content gym-finde-content">
   <div class="gym-day" style="text-align:center; background:var(--pink-pale);">
     <h2>😴 Sábado y Domingo</h2>
     <p class="gym-subtitle" style="margin-bottom:0;">Descanso completo · Pasea, estira, recupera</p>
+  </div>
   </div>
 
 </section>

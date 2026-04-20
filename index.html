@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de Dieta — Cristina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green-dark: #4a7c59;
+  --green-mid: #6b9f7a;
+  --green-light: #a8d5ba;
+  --green-pale: #d4edda;
+  --green-faint: #eef7f0;
+  --cream: #fdf8f0;
+  --cream-dark: #f5eed9;
+  --text-dark: #2c3e2d;
+  --text-mid: #4a5a4b;
+  --text-light: #6b7c6c;
+  --white: #ffffff;
+  --shadow: 0 2px 12px rgba(74,124,89,0.10);
+  --shadow-lg: 0 4px 24px rgba(74,124,89,0.15);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+  color: var(--green-dark);
+}
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+  color: var(--white);
+  text-align: center;
+  padding: 1.5rem 1rem 1rem;
+}
+.header h1 {
+  color: var(--white);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+}
+.header p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+/* ── Tab System (radio buttons) ── */
+.tabs-input { display: none; }
+
+.tabs-nav {
+  display: flex;
+  background: var(--white);
+  border-bottom: 2px solid var(--green-pale);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: var(--shadow);
+}
+.tabs-nav label {
+  flex: 1;
+  text-align: center;
+  padding: 0.75rem 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-light);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  min-width: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.tabs-nav label span.tab-icon {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 0.15rem;
+}
+
+.tab-content {
+  display: none;
+  padding: 1.25rem 1rem 3rem;
+  max-width: 800px;
+  margin: 0 auto;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tab switching */
+#tab-perfil:checked ~ .tabs-nav label[for="tab-perfil"],
+#tab-semana:checked ~ .tabs-nav label[for="tab-semana"],
+#tab-finde:checked ~ .tabs-nav label[for="tab-finde"],
+#tab-recetas:checked ~ .tabs-nav label[for="tab-recetas"],
+#tab-supps:checked ~ .tabs-nav label[for="tab-supps"] {
+  color: var(--green-dark);
+  border-bottom-color: var(--green-dark);
+  background: var(--green-faint);
+}
+
+#tab-perfil:checked ~ .tab-content.t-perfil,
+#tab-semana:checked ~ .tab-content.t-semana,
+#tab-finde:checked ~ .tab-content.t-finde,
+#tab-recetas:checked ~ .tab-content.t-recetas,
+#tab-supps:checked ~ .tab-content.t-supps {
+  display: block;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--green-light);
+}
+.card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
+}
+.card h4 {
+  font-size: 0.95rem;
+  margin: 0.8rem 0 0.4rem;
+  color: var(--green-mid);
+}
+
+/* ── Profile Grid ── */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.profile-item {
+  background: var(--green-faint);
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius-sm);
+}
+.profile-item .label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+  font-weight: 700;
+}
+.profile-item .value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+/* ── Tables ── */
+.macro-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+}
+.macro-table th {
+  background: var(--green-dark);
+  color: var(--white);
+  padding: 0.6rem 0.5rem;
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+.macro-table th:first-child { border-radius: var(--radius-sm) 0 0 0; text-align: left; }
+.macro-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+.macro-table td {
+  padding: 0.55rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--green-pale);
+}
+.macro-table td:first-child {
+  text-align: left;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+.macro-table tr:last-child td { border-bottom: none; }
+.macro-table tr:nth-child(even) { background: var(--green-faint); }
+
+/* ── Meal Blocks ── */
+.meal {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 1rem 1.15rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--green-light);
+}
+.meal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.meal-header .emoji { font-size: 1.4rem; }
+.meal-header .meal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--green-dark);
+}
+.meal-header .meal-time {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-light);
+  background: var(--green-faint);
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+  font-weight: 700;
+}
+.meal-name {
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.3rem;
+  font-size: 0.92rem;
+}
+.meal ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0.5rem;
+}
+.meal ul li {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  padding: 0.15rem 0 0.15rem 1.1rem;
+  position: relative;
+}
+.meal ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--green-mid);
+  font-weight: 700;
+}
+.meal-macros {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--green-pale);
+}
+.meal-macros span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--green-faint);
+  color: var(--green-dark);
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+}
+.meal-macros span.kcal-badge {
+  background: var(--green-dark);
+  color: var(--white);
+}
+
+/* ── Day Separator ── */
+.day-block {
+  margin-bottom: 2rem;
+}
+.day-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  color: var(--green-dark);
+  margin-bottom: 0.25rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid var(--green-light);
+}
+.day-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+.day-total {
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 1rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ── Recipe Cards ── */
+.recipe {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 1.15rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--green-light);
+}
+.recipe h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.15rem;
+}
+.recipe .recipe-meta {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-bottom: 0.6rem;
+}
+.recipe h4 {
+  font-size: 0.85rem;
+  color: var(--green-mid);
+  margin: 0.6rem 0 0.3rem;
+  font-family: 'Lato', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.recipe ol, .recipe ul {
+  padding-left: 1.3rem;
+  margin-bottom: 0.4rem;
+}
+.recipe ol li, .recipe ul li {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  padding: 0.12rem 0;
+}
+
+/* ── Supplement Cards ── */
+.supp {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 1.15rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  border-left: 4px solid var(--green-light);
+}
+.supp-icon { font-size: 1.8rem; flex-shrink: 0; }
+.supp-body { flex: 1; }
+.supp-body h3 {
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+.supp-body .dose {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--green-mid);
+}
+.supp-body .timing {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  margin-top: 0.15rem;
+}
+.supp-body .note {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+/* ── Section titles inside tabs ── */
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--green-dark);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.section-intro {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Badge for training days ── */
+.badge-train {
+  display: inline-block;
+  background: var(--green-dark);
+  color: var(--white);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 20px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.badge-rest {
+  display: inline-block;
+  background: var(--cream-dark);
+  color: var(--text-light);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 20px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+
+/* ── Info Box ── */
+.info-box {
+  background: var(--green-faint);
+  border: 1px solid var(--green-light);
+  border-radius: var(--radius-sm);
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.82rem;
+  color: var(--text-mid);
+}
+.info-box strong { color: var(--green-dark); }
+
+/* ── Responsive ── */
+@media (min-width: 600px) {
+  .header h1 { font-size: 2rem; }
+  .tabs-nav label { font-size: 0.8rem; padding: 0.85rem 1rem; }
+  .tab-content { padding: 2rem 1.5rem 3rem; }
+  .profile-grid { grid-template-columns: repeat(3, 1fr); }
+  .meal { padding: 1.25rem 1.5rem; }
+}
+@media (max-width: 380px) {
+  .tabs-nav label { font-size: 0.65rem; padding: 0.6rem 0.25rem; }
+  .tabs-nav label span.tab-icon { font-size: 1rem; }
+  .meal-macros { gap: 0.35rem; }
+  .meal-macros span { font-size: 0.65rem; padding: 0.15rem 0.4rem; }
+}
+
+/* ── Restrictions list ── */
+.restrictions {
+  list-style: none;
+  padding: 0;
+}
+.restrictions li {
+  padding: 0.35rem 0 0.35rem 1.6rem;
+  position: relative;
+  font-size: 0.85rem;
+}
+.restrictions li::before {
+  position: absolute;
+  left: 0;
+  font-size: 1rem;
+}
+.restrictions li.no::before { content: "🚫"; }
+.restrictions li.yes::before { content: "✅"; }
+.restrictions li.swap::before { content: "🔄"; }
+</style>
+</head>
+<body>
+
+<!-- Radio inputs for tabs -->
+<input type="radio" name="tabs" id="tab-perfil" class="tabs-input" checked>
+<input type="radio" name="tabs" id="tab-semana" class="tabs-input">
+<input type="radio" name="tabs" id="tab-finde" class="tabs-input">
+<input type="radio" name="tabs" id="tab-recetas" class="tabs-input">
+<input type="radio" name="tabs" id="tab-supps" class="tabs-input">
+
+<!-- Header -->
+<header class="header">
+  <h1>🌿 Plan de Dieta — Cristina</h1>
+  <p>Ganancia muscular · Salud · Fase 1 (1.900 kcal)</p>
+</header>
+
+<!-- Navigation -->
+<nav class="tabs-nav">
+  <label for="tab-perfil"><span class="tab-icon">👤</span>Perfil</label>
+  <label for="tab-semana"><span class="tab-icon">📅</span>L-V</label>
+  <label for="tab-finde"><span class="tab-icon">🌴</span>S-D</label>
+  <label for="tab-recetas"><span class="tab-icon">🍳</span>Recetas</label>
+  <label for="tab-supps"><span class="tab-icon">💊</span>Supps</label>
+</nav>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB 1: PERFIL                               -->
+<!-- ════════════════════════════════════════════ -->
+<div class="tab-content t-perfil">
+  <p class="section-title">Mi Perfil</p>
+
+  <div class="card">
+    <h3>📋 Datos Personales</h3>
+    <div class="profile-grid">
+      <div class="profile-item">
+        <div class="label">Nombre</div>
+        <div class="value">Cristina</div>
+      </div>
+      <div class="profile-item">
+        <div class="label">Edad</div>
+        <div class="value">22 años</div>
+      </div>
+      <div class="profile-item">
+        <div class="label">Altura</div>
+        <div class="value">160 cm</div>
+      </div>
+      <div class="profile-item">
+        <div class="label">Peso</div>
+        <div class="value">54 kg</div>
+      </div>
+      <div class="profile-item">
+        <div class="label">Objetivo</div>
+        <div class="value">Ganar músculo</div>
+      </div>
+      <div class="profile-item">
+        <div class="label">Entreno</div>
+        <div class="value">5 días/semana</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🏋️ Rutina de Entrenamiento</h3>
+    <ul class="restrictions">
+      <li class="yes"><strong>Lunes:</strong> Pecho + Tríceps (gimnasio 22:00-23:00)</li>
+      <li class="yes"><strong>Martes:</strong> Pierna (gimnasio 22:00-23:00)</li>
+      <li class="swap"><strong>Miércoles:</strong> Descanso / ejercicio suave en casa</li>
+      <li class="yes"><strong>Jueves:</strong> Espalda + Bíceps + Hombro (gimnasio 22:00-23:00)</li>
+      <li class="swap"><strong>Viernes:</strong> Pierna + Brazo (en casa)</li>
+      <li class="swap"><strong>Sábado:</strong> Pierna + Brazo (en casa)</li>
+      <li class="no"><strong>Domingo:</strong> Descanso total</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>🎯 Macros por Fase</h3>
+    <table class="macro-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Fase 1<br><small>Sem 1-4</small></th>
+          <th>Fase 2<br><small>Sem 5-8</small></th>
+          <th>Fase 3<br><small>Sem 9+</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>🔥 Calorías</td>
+          <td>1.900 kcal</td>
+          <td>2.100 kcal</td>
+          <td>2.300 kcal</td>
+        </tr>
+        <tr>
+          <td>🥩 Proteína</td>
+          <td>100g (21%)</td>
+          <td>105g (20%)</td>
+          <td>110g (19%)</td>
+        </tr>
+        <tr>
+          <td>🥑 Grasa</td>
+          <td>65g (31%)</td>
+          <td>65g (28%)</td>
+          <td>70g (27%)</td>
+        </tr>
+        <tr>
+          <td>🍞 Carbos</td>
+          <td>230g (48%)</td>
+          <td>275g (52%)</td>
+          <td>300g (52%)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ Restricciones Alimentarias</h3>
+    <ul class="restrictions">
+      <li class="no"><strong>Sin champiñón</strong> — en ninguna receta ni plato</li>
+      <li class="no"><strong>Sin caseína</strong> — nada de leche normal, queso normal ni yogur normal</li>
+      <li class="swap"><strong>Alternativas:</strong> leche sin lactosa, bebida de avena/soja, yogur de soja/coco, queso vegano</li>
+      <li class="swap"><strong>Reducir carne:</strong> máximo 2-3 veces/semana. Priorizar huevos, pescado, legumbres, tofu, tempeh</li>
+      <li class="yes"><strong>Whey Isolate</strong> o proteína vegetal (sin concentrado de suero)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB 2: LUNES A VIERNES                      -->
+<!-- ════════════════════════════════════════════ -->
+<div class="tab-content t-semana">
+  <p class="section-title">Menú Semanal — Fase 1</p>
+  <p class="section-intro">1.900 kcal · 100g proteína · 65g grasa · 230g carbohidratos</p>
+
+  <div class="info-box">
+    💡 <strong>Días de entreno en gimnasio (L, Ma, Ju):</strong> merienda = pre-entreno (~20:00) + cena post-entreno (~23:15, ligera y digestiva).<br>
+    <strong>Días sin gimnasio (Mi, Vi):</strong> merienda normal + cena estándar.
+  </div>
+
+  <!-- ─── LUNES ─── -->
+  <div class="day-block">
+    <h2 class="day-title">🟢 Lunes <span class="badge-train">💪 Pecho + Tríceps</span></h2>
+    <p class="day-subtitle">Día de entreno en gimnasio · 22:00–23:00</p>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌅</span>
+        <span class="meal-title">Desayuno</span>
+        <span class="meal-time">8:00</span>
+      </div>
+      <p class="meal-name">Tostadas con aguacate y huevo</p>
+      <ul>
+        <li>2 rebanadas pan integral (70g)</li>
+        <li>½ aguacate maduro (75g)</li>
+        <li>1 huevo revuelto con Aceite de Oliva Virgen Extra (5ml)</li>
+        <li>1 vaso bebida de avena (200ml)</li>
+        <li>1 mandarina (80g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~420 kcal</span>
+        <span>P: 16g</span>
+        <span>G: 18g</span>
+        <span>C: 48g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍌</span>
+        <span class="meal-title">Media Mañana</span>
+        <span class="meal-time">11:00</span>
+      </div>
+      <p class="meal-name">Yogur con fruta y granola</p>
+      <ul>
+        <li>Yogur de soja natural (150g)</li>
+        <li>Granola sin azúcar añadido (30g)</li>
+        <li>Plátano (100g)</li>
+        <li>5 nueces (15g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~310 kcal</span>
+        <span>P: 12g</span>
+        <span>G: 14g</span>
+        <span>C: 36g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍽️</span>
+        <span class="meal-title">Comida</span>
+        <span class="meal-time">14:00</span>
+      </div>
+      <p class="meal-name">Bowl de quinoa con garbanzos y verduras</p>
+      <ul>
+        <li>Quinoa cocida (150g en cocido)</li>
+        <li>Garbanzos cocidos (100g)</li>
+        <li>Espinacas frescas (50g)</li>
+        <li>Tomate cherry (80g)</li>
+        <li>Pepino (60g)</li>
+        <li>Aceite de Oliva Virgen Extra (10ml)</li>
+        <li>Semillas de calabaza (10g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~480 kcal</span>
+        <span>P: 22g</span>
+        <span>G: 16g</span>
+        <span>C: 60g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">⚡</span>
+        <span class="meal-title">Pre-Entreno</span>
+        <span class="meal-time">~20:00</span>
+      </div>
+      <p class="meal-name">Tosta de crema de cacahuete con plátano</p>
+      <ul>
+        <li>1 rebanada pan integral (35g)</li>
+        <li>Crema de cacahuete 100% natural (15g)</li>
+        <li>½ plátano en rodajas (50g)</li>
+        <li>Pizca de canela</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~250 kcal</span>
+        <span>P: 8g</span>
+        <span>G: 9g</span>
+        <span>C: 34g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌙</span>
+        <span class="meal-title">Post-Entreno (Cena)</span>
+        <span class="meal-time">~23:15</span>
+      </div>
+      <p class="meal-name">Batido de proteína con tortitas de arroz</p>
+      <ul>
+        <li>Whey Isolate o proteína vegetal (30g polvo) con agua (250ml)</li>
+        <li>3 tortitas de arroz (30g)</li>
+        <li>Mermelada sin azúcar (15g)</li>
+        <li>1 plátano pequeño (80g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~340 kcal</span>
+        <span>P: 28g</span>
+        <span>G: 3g</span>
+        <span>C: 52g</span>
+      </div>
+    </div>
+
+    <div class="day-total">
+      Total Lunes: ~1.800 kcal · P: 86g · G: 60g · C: 230g
+    </div>
+  </div>
+
+  <!-- ─── MARTES ─── -->
+  <div class="day-block">
+    <h2 class="day-title">🟢 Martes <span class="badge-train">🦵 Pierna</span></h2>
+    <p class="day-subtitle">Día de entreno en gimnasio · 22:00–23:00</p>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌅</span>
+        <span class="meal-title">Desayuno</span>
+        <span class="meal-time">8:00</span>
+      </div>
+      <p class="meal-name">Porridge de avena con frutos rojos</p>
+      <ul>
+        <li>Copos de avena (60g)</li>
+        <li>Bebida de soja (200ml)</li>
+        <li>Frutos rojos congelados (80g)</li>
+        <li>1 cucharada miel (10g)</li>
+        <li>Semillas de chía (8g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~380 kcal</span>
+        <span>P: 16g</span>
+        <span>G: 10g</span>
+        <span>C: 56g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍌</span>
+        <span class="meal-title">Media Mañana</span>
+        <span class="meal-time">11:00</span>
+      </div>
+      <p class="meal-name">Tosta de hummus con tomate</p>
+      <ul>
+        <li>1 rebanada pan integral (35g)</li>
+        <li>Hummus casero (40g)</li>
+        <li>Tomate en rodajas (60g)</li>
+        <li>1 manzana (150g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~260 kcal</span>
+        <span>P: 8g</span>
+        <span>G: 7g</span>
+        <span>C: 42g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍽️</span>
+        <span class="meal-title">Comida</span>
+        <span class="meal-time">14:00</span>
+      </div>
+      <p class="meal-name">Pasta integral con pesto vegetal y tofu</p>
+      <ul>
+        <li>Pasta integral (80g en seco)</li>
+        <li>Pesto vegetal (sin queso, con levadura nutricional) (25g)</li>
+        <li>Tofu firme en dados, salteado (100g)</li>
+        <li>Tomate cherry (60g)</li>
+        <li>Aceite de Oliva Virgen Extra (5ml)</li>
+        <li>Rúcula (30g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~520 kcal</span>
+        <span>P: 28g</span>
+        <span>G: 16g</span>
+        <span>C: 64g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">⚡</span>
+        <span class="meal-title">Pre-Entreno</span>
+        <span class="meal-time">~20:00</span>
+      </div>
+      <p class="meal-name">Batido pre-entreno de avena y plátano</p>
+      <ul>
+        <li>Bebida de avena (200ml)</li>
+        <li>1 plátano (100g)</li>
+        <li>Copos de avena (25g)</li>
+        <li>Crema de almendra (10g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~290 kcal</span>
+        <span>P: 8g</span>
+        <span>G: 9g</span>
+        <span>C: 44g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌙</span>
+        <span class="meal-title">Post-Entreno (Cena)</span>
+        <span class="meal-time">~23:15</span>
+      </div>
+      <p class="meal-name">Tortilla de claras con boniato</p>
+      <ul>
+        <li>3 claras de huevo + 1 huevo entero</li>
+        <li>Boniato asado (120g)</li>
+        <li>Espinacas salteadas (40g)</li>
+        <li>Aceite de Oliva Virgen Extra (5ml)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~350 kcal</span>
+        <span>P: 24g</span>
+        <span>G: 10g</span>
+        <span>C: 38g</span>
+      </div>
+    </div>
+
+    <div class="day-total">
+      Total Martes: ~1.800 kcal · P: 84g · G: 52g · C: 244g
+    </div>
+  </div>
+
+  <!-- ─── MIÉRCOLES ─── -->
+  <div class="day-block">
+    <h2 class="day-title">🔵 Miércoles <span class="badge-rest">🧘 Descanso</span></h2>
+    <p class="day-subtitle">Sin gimnasio · Ejercicio suave en casa opcional</p>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌅</span>
+        <span class="meal-title">Desayuno</span>
+        <span class="meal-time">8:00</span>
+      </div>
+      <p class="meal-name">Tortitas de avena con fruta</p>
+      <ul>
+        <li>Copos de avena (50g)</li>
+        <li>1 huevo + 1 clara</li>
+        <li>Bebida de avena (50ml)</li>
+        <li>Arándanos frescos (60g)</li>
+        <li>Sirope de agave (10g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~370 kcal</span>
+        <span>P: 18g</span>
+        <span>G: 10g</span>
+        <span>C: 50g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍌</span>
+        <span class="meal-title">Media Mañana</span>
+        <span class="meal-time">11:00</span>
+      </div>
+      <p class="meal-name">Mix de frutos secos y fruta</p>
+      <ul>
+        <li>Mix de frutos secos (almendras, nueces, anacardos) (25g)</li>
+        <li>1 pera (160g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~240 kcal</span>
+        <span>P: 6g</span>
+        <span>G: 14g</span>
+        <span>C: 26g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍽️</span>
+        <span class="meal-title">Comida</span>
+        <span class="meal-time">14:00</span>
+      </div>
+      <p class="meal-name">Lentejas estofadas con verduras y arroz</p>
+      <ul>
+        <li>Lentejas cocidas (150g)</li>
+        <li>Arroz basmati cocido (100g)</li>
+        <li>Zanahoria (60g)</li>
+        <li>Pimiento rojo (50g)</li>
+        <li>Cebolla pochada (40g)</li>
+        <li>Aceite de Oliva Virgen Extra (10ml)</li>
+        <li>Pimentón de la Vera, comino</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~510 kcal</span>
+        <span>P: 24g</span>
+        <span>G: 12g</span>
+        <span>C: 72g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍵</span>
+        <span class="meal-title">Merienda</span>
+        <span class="meal-time">18:00</span>
+      </div>
+      <p class="meal-name">Yogur vegetal con semillas</p>
+      <ul>
+        <li>Yogur de coco (125g)</li>
+        <li>Semillas de lino molidas (10g)</li>
+        <li>1 kiwi (80g)</li>
+        <li>Copos de avena (15g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~220 kcal</span>
+        <span>P: 6g</span>
+        <span>G: 10g</span>
+        <span>C: 28g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌙</span>
+        <span class="meal-title">Cena</span>
+        <span class="meal-time">21:00</span>
+      </div>
+      <p class="meal-name">Revuelto de tofu con verduras y pan</p>
+      <ul>
+        <li>Tofu firme desmenuzado (120g)</li>
+        <li>Calabacín (80g)</li>
+        <li>Pimiento verde (50g)</li>
+        <li>Cebolleta (30g)</li>
+        <li>Cúrcuma, sal, pimienta</li>
+        <li>Aceite de Oliva Virgen Extra (8ml)</li>
+        <li>1 rebanada pan integral (35g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~380 kcal</span>
+        <span>P: 24g</span>
+        <span>G: 16g</span>
+        <span>C: 32g</span>
+      </div>
+    </div>
+
+    <div class="day-total">
+      Total Miércoles: ~1.720 kcal · P: 78g · G: 62g · C: 208g
+    </div>
+  </div>
+
+  <!-- ─── JUEVES ─── -->
+  <div class="day-block">
+    <h2 class="day-title">🟢 Jueves <span class="badge-train">💪 Espalda + Bíceps + Hombro</span></h2>
+    <p class="day-subtitle">Día de entreno en gimnasio · 22:00–23:00</p>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌅</span>
+        <span class="meal-title">Desayuno</span>
+        <span class="meal-time">8:00</span>
+      </div>
+      <p class="meal-name">Smoothie bowl proteico</p>
+      <ul>
+        <li>Bebida de soja (150ml)</li>
+        <li>Plátano congelado (100g)</li>
+        <li>Espinacas frescas (30g)</li>
+        <li>Proteína vegetal en polvo (15g)</li>
+        <li>Toppings: granola (20g), fresas (50g), coco rallado (5g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~380 kcal</span>
+        <span>P: 20g</span>
+        <span>G: 8g</span>
+        <span>C: 56g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍌</span>
+        <span class="meal-title">Media Mañana</span>
+        <span class="meal-time">11:00</span>
+      </div>
+      <p class="meal-name">Tosta de hummus con pepino</p>
+      <ul>
+        <li>2 tortitas de arroz (20g)</li>
+        <li>Hummus (50g)</li>
+        <li>Pepino en rodajas (80g)</li>
+        <li>1 naranja (180g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~250 kcal</span>
+        <span>P: 8g</span>
+        <span>G: 7g</span>
+        <span>C: 40g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍽️</span>
+        <span class="meal-title">Comida</span>
+        <span class="meal-time">14:00</span>
+      </div>
+      <p class="meal-name">Salmón al horno con patata y ensalada</p>
+      <ul>
+        <li>Salmón fresco (120g)</li>
+        <li>Patata mediana asada (150g)</li>
+        <li>Ensalada mixta: lechuga (40g), tomate (50g), zanahoria rallada (30g)</li>
+        <li>Aceite de Oliva Virgen Extra (10ml)</li>
+        <li>Limón, eneldo</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~520 kcal</span>
+        <span>P: 30g</span>
+        <span>G: 18g</span>
+        <span>C: 48g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">⚡</span>
+        <span class="meal-title">Pre-Entreno</span>
+        <span class="meal-time">~20:00</span>
+      </div>
+      <p class="meal-name">Sándwich ligero de pavo</p>
+      <ul>
+        <li>2 rebanadas pan integral (70g)</li>
+        <li>Pechuga de pavo en lonchas (50g)</li>
+        <li>Tomate (40g)</li>
+        <li>Lechuga (20g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~270 kcal</span>
+        <span>P: 18g</span>
+        <span>G: 4g</span>
+        <span>C: 38g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌙</span>
+        <span class="meal-title">Post-Entreno (Cena)</span>
+        <span class="meal-time">~23:15</span>
+      </div>
+      <p class="meal-name">Batido recuperador con tostada</p>
+      <ul>
+        <li>Whey Isolate o proteína vegetal (30g) con bebida de avena (200ml)</li>
+        <li>1 rebanada pan integral (35g)</li>
+        <li>Crema de cacahuete (10g)</li>
+        <li>Miel (5g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~380 kcal</span>
+        <span>P: 32g</span>
+        <span>G: 10g</span>
+        <span>C: 40g</span>
+      </div>
+    </div>
+
+    <div class="day-total">
+      Total Jueves: ~1.800 kcal · P: 108g · G: 47g · C: 222g
+    </div>
+  </div>
+
+  <!-- ─── VIERNES ─── -->
+  <div class="day-block">
+    <h2 class="day-title">🔵 Viernes <span class="badge-rest">🏠 Entreno en casa</span></h2>
+    <p class="day-subtitle">Pierna + Brazo en casa · Sin gimnasio</p>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌅</span>
+        <span class="meal-title">Desayuno</span>
+        <span class="meal-time">8:00</span>
+      </div>
+      <p class="meal-name">Tostadas con tomate y huevo</p>
+      <ul>
+        <li>2 rebanadas pan integral (70g)</li>
+        <li>Tomate rallado (60g)</li>
+        <li>Aceite de Oliva Virgen Extra (8ml)</li>
+        <li>2 huevos cocidos</li>
+        <li>1 vaso bebida de soja (200ml)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~440 kcal</span>
+        <span>P: 24g</span>
+        <span>G: 18g</span>
+        <span>C: 42g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍌</span>
+        <span class="meal-title">Media Mañana</span>
+        <span class="meal-time">11:00</span>
+      </div>
+      <p class="meal-name">Fruta con crema de almendra</p>
+      <ul>
+        <li>1 manzana (150g)</li>
+        <li>Crema de almendra (15g)</li>
+        <li>2 dátiles medjool (30g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~250 kcal</span>
+        <span>P: 4g</span>
+        <span>G: 10g</span>
+        <span>C: 38g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍽️</span>
+        <span class="meal-title">Comida</span>
+        <span class="meal-time">14:00</span>
+      </div>
+      <p class="meal-name">Arroz con huevo, edamame y verduras salteadas</p>
+      <ul>
+        <li>Arroz basmati cocido (150g)</li>
+        <li>1 huevo a la plancha</li>
+        <li>Edamame pelado (60g)</li>
+        <li>Brócoli (80g)</li>
+        <li>Zanahoria rallada (40g)</li>
+        <li>Salsa de soja baja en sal (10ml)</li>
+        <li>Aceite de Oliva Virgen Extra (8ml)</li>
+        <li>Sésamo tostado (5g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~490 kcal</span>
+        <span>P: 22g</span>
+        <span>G: 16g</span>
+        <span>C: 60g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍵</span>
+        <span class="meal-title">Merienda</span>
+        <span class="meal-time">18:00</span>
+      </div>
+      <p class="meal-name">Batido verde</p>
+      <ul>
+        <li>Bebida de avena (200ml)</li>
+        <li>Espinacas frescas (30g)</li>
+        <li>Plátano (100g)</li>
+        <li>Crema de cacahuete (10g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~260 kcal</span>
+        <span>P: 8g</span>
+        <span>G: 9g</span>
+        <span>C: 38g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌙</span>
+        <span class="meal-title">Cena</span>
+        <span class="meal-time">21:00</span>
+      </div>
+      <p class="meal-name">Tortilla de espinacas con pan y ensalada</p>
+      <ul>
+        <li>2 huevos + 1 clara</li>
+        <li>Espinacas (50g)</li>
+        <li>Cebolla pochada (30g)</li>
+        <li>Aceite de Oliva Virgen Extra (5ml)</li>
+        <li>1 rebanada pan integral (35g)</li>
+        <li>Ensalada verde: lechuga (30g), pepino (40g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~380 kcal</span>
+        <span>P: 22g</span>
+        <span>G: 16g</span>
+        <span>C: 32g</span>
+      </div>
+    </div>
+
+    <div class="day-total">
+      Total Viernes: ~1.820 kcal · P: 80g · G: 69g · C: 210g
+    </div>
+  </div>
+
+  <div class="info-box">
+    📊 <strong>Media semanal L-V:</strong> ~1.790-1.820 kcal. Dentro del rango de la Fase 1 (1.900 kcal). Los días de entreno son ligeramente más altos en carbos para facilitar la recuperación. Ajusta gramajes si necesitas llegar exacto.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB 3: SÁBADO Y DOMINGO                     -->
+<!-- ════════════════════════════════════════════ -->
+<div class="tab-content t-finde">
+  <p class="section-title">Fin de Semana</p>
+  <p class="section-intro">Más relajado, sin gimnasio. Domingo con comida trampa permitida 🎉</p>
+
+  <!-- ─── SÁBADO ─── -->
+  <div class="day-block">
+    <h2 class="day-title">🟡 Sábado <span class="badge-rest">🏠 Entreno en casa</span></h2>
+    <p class="day-subtitle">Pierna + Brazo en casa · Menú equilibrado</p>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌅</span>
+        <span class="meal-title">Desayuno</span>
+        <span class="meal-time">10:00</span>
+      </div>
+      <p class="meal-name">Pancakes de avena y plátano</p>
+      <ul>
+        <li>Copos de avena (60g)</li>
+        <li>1 plátano maduro (100g)</li>
+        <li>1 huevo</li>
+        <li>Bebida de avena (50ml)</li>
+        <li>Frutos rojos (80g)</li>
+        <li>Sirope de arce (10g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~420 kcal</span>
+        <span>P: 16g</span>
+        <span>G: 10g</span>
+        <span>C: 64g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍌</span>
+        <span class="meal-title">Media Mañana</span>
+        <span class="meal-time">12:30</span>
+      </div>
+      <p class="meal-name">Tosta de aguacate y tomate</p>
+      <ul>
+        <li>1 rebanada pan de centeno (40g)</li>
+        <li>½ aguacate (60g)</li>
+        <li>Tomate en rodajas (50g)</li>
+        <li>Semillas de sésamo (5g)</li>
+        <li>Sal en escamas, pimienta</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~250 kcal</span>
+        <span>P: 6g</span>
+        <span>G: 14g</span>
+        <span>C: 24g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍽️</span>
+        <span class="meal-title">Comida</span>
+        <span class="meal-time">14:30</span>
+      </div>
+      <p class="meal-name">Poke bowl de salmón y edamame</p>
+      <ul>
+        <li>Arroz de sushi cocido (140g)</li>
+        <li>Salmón fresco en dados (100g)</li>
+        <li>Edamame pelado (50g)</li>
+        <li>Aguacate (40g)</li>
+        <li>Pepino (50g)</li>
+        <li>Zanahoria rallada (30g)</li>
+        <li>Salsa de soja baja en sal (10ml)</li>
+        <li>Sésamo tostado (5g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~530 kcal</span>
+        <span>P: 32g</span>
+        <span>G: 18g</span>
+        <span>C: 52g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍵</span>
+        <span class="meal-title">Merienda</span>
+        <span class="meal-time">18:00</span>
+      </div>
+      <p class="meal-name">Yogur vegetal con granola</p>
+      <ul>
+        <li>Yogur de soja con sabor a vainilla (150g)</li>
+        <li>Granola casera (25g)</li>
+        <li>Melocotón o fruta de temporada (100g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~230 kcal</span>
+        <span>P: 10g</span>
+        <span>G: 6g</span>
+        <span>C: 34g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌙</span>
+        <span class="meal-title">Cena</span>
+        <span class="meal-time">21:00</span>
+      </div>
+      <p class="meal-name">Wrap de tempeh con verduras</p>
+      <ul>
+        <li>Tortilla wrap integral (60g)</li>
+        <li>Tempeh marinado a la plancha (80g)</li>
+        <li>Lechuga (30g)</li>
+        <li>Pimiento asado (50g)</li>
+        <li>Guacamole (30g)</li>
+        <li>Aceite de Oliva Virgen Extra (5ml)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~400 kcal</span>
+        <span>P: 22g</span>
+        <span>G: 16g</span>
+        <span>C: 38g</span>
+      </div>
+    </div>
+
+    <div class="day-total">
+      Total Sábado: ~1.830 kcal · P: 86g · G: 64g · C: 212g
+    </div>
+  </div>
+
+  <!-- ─── DOMINGO ─── -->
+  <div class="day-block">
+    <h2 class="day-title">🎉 Domingo <span class="badge-rest">😴 Descanso total</span></h2>
+    <p class="day-subtitle">Día de descanso · Comida trampa permitida</p>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌅</span>
+        <span class="meal-title">Brunch</span>
+        <span class="meal-time">11:00</span>
+      </div>
+      <p class="meal-name">French toast con fruta</p>
+      <ul>
+        <li>2 rebanadas pan brioche o pan de molde (70g)</li>
+        <li>1 huevo batido</li>
+        <li>Bebida de avena (50ml)</li>
+        <li>Canela</li>
+        <li>Fresas (80g)</li>
+        <li>Sirope de arce (10g)</li>
+        <li>Yogur de coco (50g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~420 kcal</span>
+        <span>P: 14g</span>
+        <span>G: 12g</span>
+        <span>C: 58g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍽️</span>
+        <span class="meal-title">Comida (trampa) 🎉</span>
+        <span class="meal-time">14:30</span>
+      </div>
+      <p class="meal-name">Lo que te apetezca — disfruta sin culpa</p>
+      <ul>
+        <li>Pizza, sushi, hamburguesa, pasta… tú eliges</li>
+        <li>Intenta incluir algo de proteína y verdura</li>
+        <li>No te pases con las cantidades, disfruta con cabeza</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~700-800 kcal</span>
+        <span>Flexible</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🍵</span>
+        <span class="meal-title">Merienda</span>
+        <span class="meal-time">18:00</span>
+      </div>
+      <p class="meal-name">Fruta con chocolate negro</p>
+      <ul>
+        <li>1 plátano (100g)</li>
+        <li>Chocolate negro &gt;85% (20g)</li>
+        <li>Infusión (sin azúcar)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~210 kcal</span>
+        <span>P: 4g</span>
+        <span>G: 8g</span>
+        <span>C: 30g</span>
+      </div>
+    </div>
+
+    <div class="meal">
+      <div class="meal-header">
+        <span class="emoji">🌙</span>
+        <span class="meal-title">Cena</span>
+        <span class="meal-time">21:00</span>
+      </div>
+      <p class="meal-name">Crema de calabaza con huevo cocido</p>
+      <ul>
+        <li>Calabaza (200g)</li>
+        <li>Patata (80g)</li>
+        <li>Cebolla (40g)</li>
+        <li>Aceite de Oliva Virgen Extra (8ml)</li>
+        <li>Nuez moscada</li>
+        <li>2 huevos cocidos</li>
+        <li>1 rebanada pan integral (35g)</li>
+      </ul>
+      <div class="meal-macros">
+        <span class="kcal-badge">~430 kcal</span>
+        <span>P: 20g</span>
+        <span>G: 16g</span>
+        <span>C: 46g</span>
+      </div>
+    </div>
+
+    <div class="day-total">
+      Total Domingo: ~1.760-1.860 kcal (sin contar exceso del trampa) · Día flexible
+    </div>
+  </div>
+
+  <div class="info-box">
+    🧠 <strong>Tip:</strong> La comida trampa del domingo es psicológica y fisiológica. Disfrútala sin culpa. Ayuda a la adherencia y a regular hormonas (leptina). El lunes vuelves a la rutina.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB 4: RECETAS                              -->
+<!-- ════════════════════════════════════════════ -->
+<div class="tab-content t-recetas">
+  <p class="section-title">Recetas Rápidas</p>
+  <p class="section-intro">Sin champiñón · Sin caseína · Baja en carne · Fáciles y ricas 💚</p>
+
+  <!-- Receta 1 -->
+  <div class="recipe">
+    <h3>🥚 1. Tofu Revuelto ("Scramble")</h3>
+    <p class="recipe-meta">⏱ 10 min · 🍽 1 ración · ~300 kcal</p>
+    <h4>Ingredientes</h4>
+    <ul>
+      <li>Tofu firme (150g), desmenuzado con tenedor</li>
+      <li>Cebolleta picada (30g)</li>
+      <li>Pimiento rojo en dados (40g)</li>
+      <li>Espinacas frescas (40g)</li>
+      <li>Cúrcuma (½ cucharadita), pimentón dulce, sal, pimienta negra</li>
+      <li>Aceite de Oliva Virgen Extra (8ml)</li>
+      <li>Levadura nutricional (5g) — opcional, da sabor "a queso"</li>
+    </ul>
+    <h4>Preparación</h4>
+    <ol>
+      <li>Calienta el Aceite de Oliva Virgen Extra en sartén a fuego medio.</li>
+      <li>Sofríe la cebolleta y el pimiento 2-3 min.</li>
+      <li>Añade el tofu desmenuzado, la cúrcuma y el pimentón. Mezcla bien.</li>
+      <li>Cocina 4-5 min removiendo. Añade espinacas al final.</li>
+      <li>Sirve con tostada integral. Espolvorea levadura nutricional.</li>
+    </ol>
+    <div class="meal-macros">
+      <span>P: 20g</span> <span>G: 14g</span> <span>C: 10g</span>
+    </div>
+  </div>
+
+  <!-- Receta 2 -->
+  <div class="recipe">
+    <h3>🥞 2. Tortilla Proteica de Avena</h3>
+    <p class="recipe-meta">⏱ 8 min · 🍽 1 ración · ~350 kcal</p>
+    <h4>Ingredientes</h4>
+    <ul>
+      <li>Copos de avena (40g)</li>
+      <li>2 huevos</li>
+      <li>Bebida de avena (30ml)</li>
+      <li>Espinacas (30g)</li>
+      <li>Aceite de Oliva Virgen Extra (5ml)</li>
+      <li>Sal, pimienta, orégano</li>
+    </ul>
+    <h4>Preparación</h4>
+    <ol>
+      <li>Mezcla los copos, huevos y bebida de avena. Deja reposar 2 min.</li>
+      <li>Añade las espinacas picadas. Sazona.</li>
+      <li>Vierte en sartén con Aceite de Oliva Virgen Extra caliente.</li>
+      <li>Cocina 3 min por cada lado a fuego medio-bajo.</li>
+      <li>Sirve con tomate en rodajas o aguacate.</li>
+    </ol>
+    <div class="meal-macros">
+      <span>P: 20g</span> <span>G: 14g</span> <span>C: 34g</span>
+    </div>
+  </div>
+
+  <!-- Receta 3 -->
+  <div class="recipe">
+    <h3>🥗 3. Bowl de Quinoa Mediterráneo</h3>
+    <p class="recipe-meta">⏱ 20 min · 🍽 1 ración · ~480 kcal</p>
+    <h4>Ingredientes</h4>
+    <ul>
+      <li>Quinoa (70g en seco → ~150g cocida)</li>
+      <li>Garbanzos cocidos (100g)</li>
+      <li>Tomate cherry (80g)</li>
+      <li>Pepino en dados (60g)</li>
+      <li>Cebolla morada (20g)</li>
+      <li>Aceitunas negras (20g)</li>
+      <li>Aceite de Oliva Virgen Extra (10ml)</li>
+      <li>Limón, orégano, sal</li>
+    </ul>
+    <h4>Preparación</h4>
+    <ol>
+      <li>Cuece la quinoa según las instrucciones. Deja enfriar.</li>
+      <li>Mezcla todos los ingredientes en un bowl.</li>
+      <li>Aliña con Aceite de Oliva Virgen Extra, zumo de limón, orégano y sal.</li>
+      <li>Puedes añadir semillas de calabaza o girasol por encima.</li>
+    </ol>
+    <div class="meal-macros">
+      <span>P: 20g</span> <span>G: 16g</span> <span>C: 58g</span>
+    </div>
+  </div>
+
+  <!-- Receta 4 -->
+  <div class="recipe">
+    <h3>🍝 4. Pasta con Pesto Vegetal</h3>
+    <p class="recipe-meta">⏱ 15 min · 🍽 1 ración · ~500 kcal</p>
+    <h4>Ingredientes</h4>
+    <ul>
+      <li>Pasta integral (80g en seco)</li>
+      <li>Albahaca fresca (20g)</li>
+      <li>Piñones (15g)</li>
+      <li>Aceite de Oliva Virgen Extra (15ml)</li>
+      <li>Levadura nutricional (10g) — sustituye al parmesano</li>
+      <li>Ajo (1 diente pequeño)</li>
+      <li>Sal, pimienta</li>
+      <li>Tomate cherry (60g) para servir</li>
+    </ul>
+    <h4>Preparación</h4>
+    <ol>
+      <li>Cuece la pasta al dente. Reserva un poco de agua de cocción.</li>
+      <li>Tritura albahaca, piñones, ajo, Aceite de Oliva Virgen Extra y levadura nutricional.</li>
+      <li>Mezcla la pasta con el pesto. Añade agua de cocción si está seca.</li>
+      <li>Sirve con tomates cherry cortados por la mitad.</li>
+    </ol>
+    <div class="meal-macros">
+      <span>P: 18g</span> <span>G: 20g</span> <span>C: 58g</span>
+    </div>
+  </div>
+
+  <!-- Receta 5 -->
+  <div class="recipe">
+    <h3>🥘 5. Lentejas Express</h3>
+    <p class="recipe-meta">⏱ 25 min (con lentejas rojas) · 🍽 2 raciones · ~400 kcal/ración</p>
+    <h4>Ingredientes</h4>
+    <ul>
+      <li>Lentejas rojas (120g en seco)</li>
+      <li>Zanahoria en dados (80g)</li>
+      <li>Cebolla picada (60g)</li>
+      <li>Pimiento rojo (50g)</li>
+      <li>Tomate triturado (100g)</li>
+      <li>Ajo (1 diente)</li>
+      <li>Comino, pimentón, cúrcuma</li>
+      <li>Aceite de Oliva Virgen Extra (10ml)</li>
+      <li>Caldo de verduras (400ml)</li>
+    </ul>
+    <h4>Preparación</h4>
+    <ol>
+      <li>Sofríe cebolla, ajo, zanahoria y pimiento 4-5 min.</li>
+      <li>Añade especias y tomate. Cocina 2 min.</li>
+      <li>Agrega lentejas y caldo. Hierve y baja el fuego.</li>
+      <li>Cocina 15-18 min hasta que las lentejas estén tiernas.</li>
+      <li>Sirve con arroz o pan integral.</li>
+    </ol>
+    <div class="meal-macros">
+      <span>P: 22g</span> <span>G: 8g</span> <span>C: 52g</span>
+    </div>
+  </div>
+
+  <!-- Receta 6 -->
+  <div class="recipe">
+    <h3>🐟 6. Salmón al Horno con Verduras</h3>
+    <p class="recipe-meta">⏱ 25 min · 🍽 1 ración · ~420 kcal</p>
+    <h4>Ingredientes</h4>
+    <ul>
+      <li>Filete de salmón (130g)</li>
+      <li>Brócoli (100g)</li>
+      <li>Boniato en cubos (100g)</li>
+      <li>Aceite de Oliva Virgen Extra (10ml)</li>
+      <li>Limón, eneldo, ajo en polvo, sal, pimienta</li>
+    </ul>
+    <h4>Preparación</h4>
+    <ol>
+      <li>Precalienta el horno a 200°C.</li>
+      <li>Coloca el boniato y brócoli en bandeja. Rocía con Aceite de Oliva Virgen Extra y especias.</li>
+      <li>Hornea 10 min. Añade el salmón con limón y eneldo.</li>
+      <li>Hornea 12-15 min más hasta que el salmón esté hecho.</li>
+    </ol>
+    <div class="meal-macros">
+      <span>P: 30g</span> <span>G: 18g</span> <span>C: 28g</span>
+    </div>
+  </div>
+
+  <!-- Receta 7 -->
+  <div class="recipe">
+    <h3>🌯 7. Wrap de Tempeh Marinado</h3>
+    <p class="recipe-meta">⏱ 15 min · 🍽 1 ración · ~400 kcal</p>
+    <h4>Ingredientes</h4>
+    <ul>
+      <li>Tempeh en láminas (80g)</li>
+      <li>Salsa de soja baja en sal (15ml)</li>
+      <li>Sirope de arce (5ml)</li>
+      <li>Ajo en polvo, pimentón ahumado</li>
+      <li>Tortilla wrap integral (60g)</li>
+      <li>Lechuga (30g)</li>
+      <li>Aguacate en láminas (40g)</li>
+      <li>Zanahoria rallada (30g)</li>
+    </ul>
+    <h4>Preparación</h4>
+    <ol>
+      <li>Marina el tempeh 5 min en soja, sirope y especias.</li>
+      <li>Cocina en sartén a fuego fuerte 2-3 min por lado hasta dorar.</li>
+      <li>Monta el wrap: lechuga, tempeh, aguacate, zanahoria.</li>
+      <li>Enrolla y corta por la mitad.</li>
+    </ol>
+    <div class="meal-macros">
+      <span>P: 22g</span> <span>G: 16g</span> <span>C: 34g</span>
+    </div>
+  </div>
+
+  <!-- Receta 8 -->
+  <div class="recipe">
+    <h3>🥣 8. Overnight Oats</h3>
+    <p class="recipe-meta">⏱ 5 min (+ noche en nevera) · 🍽 1 ración · ~380 kcal</p>
+    <h4>Ingredientes</h4>
+    <ul>
+      <li>Copos de avena (50g)</li>
+      <li>Bebida de soja (150ml)</li>
+      <li>Semillas de chía (10g)</li>
+      <li>Yogur de soja (50g)</li>
+      <li>Plátano en rodajas (80g)</li>
+      <li>Canela</li>
+      <li>Crema de cacahuete (10g) para servir</li>
+    </ul>
+    <h4>Preparación</h4>
+    <ol>
+      <li>Mezcla avena, bebida de soja, chía, yogur y canela en un tarro.</li>
+      <li>Refrigera toda la noche (mín. 4 horas).</li>
+      <li>Por la mañana, añade plátano y crema de cacahuete por encima.</li>
+    </ol>
+    <div class="meal-macros">
+      <span>P: 16g</span> <span>G: 14g</span> <span>C: 46g</span>
+    </div>
+  </div>
+
+  <!-- Receta 9 -->
+  <div class="recipe">
+    <h3>🍲 9. Garbanzos Especiados al Curry</h3>
+    <p class="recipe-meta">⏱ 20 min · 🍽 2 raciones · ~380 kcal/ración</p>
+    <h4>Ingredientes</h4>
+    <ul>
+      <li>Garbanzos cocidos (250g)</li>
+      <li>Leche de coco light (200ml)</li>
+      <li>Cebolla picada (60g)</li>
+      <li>Ajo (2 dientes)</li>
+      <li>Jengibre fresco rallado (5g)</li>
+      <li>Tomate triturado (100g)</li>
+      <li>Curry en polvo, cúrcuma, comino</li>
+      <li>Espinacas frescas (60g)</li>
+      <li>Aceite de Oliva Virgen Extra (8ml)</li>
+    </ul>
+    <h4>Preparación</h4>
+    <ol>
+      <li>Sofríe cebolla, ajo y jengibre en Aceite de Oliva Virgen Extra 3 min.</li>
+      <li>Añade las especias y cocina 1 min removiendo.</li>
+      <li>Agrega tomate, garbanzos y leche de coco. Cocina 10 min.</li>
+      <li>Incorpora espinacas al final. Sirve con arroz basmati.</li>
+    </ol>
+    <div class="meal-macros">
+      <span>P: 16g</span> <span>G: 12g</span> <span>C: 42g</span>
+    </div>
+  </div>
+
+  <!-- Receta 10 -->
+  <div class="recipe">
+    <h3>🥤 10. Batido Proteico Post-Entreno</h3>
+    <p class="recipe-meta">⏱ 3 min · 🍽 1 ración · ~320 kcal</p>
+    <h4>Ingredientes</h4>
+    <ul>
+      <li>Whey Isolate o proteína vegetal (30g)</li>
+      <li>Bebida de avena (250ml)</li>
+      <li>Plátano (80g)</li>
+      <li>Copos de avena (20g)</li>
+      <li>Canela (opcional)</li>
+      <li>Hielo (3-4 cubitos)</li>
+    </ul>
+    <h4>Preparación</h4>
+    <ol>
+      <li>Pon todos los ingredientes en la batidora.</li>
+      <li>Tritura hasta que esté cremoso (30 seg).</li>
+      <li>Bebe en los 30 min después de entrenar.</li>
+    </ol>
+    <div class="meal-macros">
+      <span>P: 30g</span> <span>G: 5g</span> <span>C: 40g</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB 5: SUPLEMENTOS                          -->
+<!-- ════════════════════════════════════════════ -->
+<div class="tab-content t-supps">
+  <p class="section-title">Guía de Suplementos</p>
+  <p class="section-intro">Cuándo, cuánto y cómo tomar cada suplemento 💊</p>
+
+  <div class="supp">
+    <div class="supp-icon">⚡</div>
+    <div class="supp-body">
+      <h3>Creatina Monohidrato</h3>
+      <p class="dose">5g al día (1 cucharadita rasa)</p>
+      <p class="timing">📅 <strong>Cuándo:</strong> Todos los días, a la misma hora. Puede ser con el desayuno o post-entreno.</p>
+      <p class="timing">💧 <strong>Cómo:</strong> Disuelta en agua o en el batido de proteína. Bebe bastante agua a lo largo del día.</p>
+      <p class="note">💡 No necesitas fase de carga. Efecto a partir de 2-4 semanas de uso continuado. Días de descanso también.</p>
+    </div>
+  </div>
+
+  <div class="supp">
+    <div class="supp-icon">🐟</div>
+    <div class="supp-body">
+      <h3>Omega-3 (EPA/DHA)</h3>
+      <p class="dose">1.000-2.000mg al día (según etiqueta del producto)</p>
+      <p class="timing">📅 <strong>Cuándo:</strong> Con la comida principal (almuerzo o cena) — la grasa mejora la absorción.</p>
+      <p class="timing">💧 <strong>Cómo:</strong> Cápsulas con un vaso de agua, junto a comida que contenga grasa.</p>
+      <p class="note">💡 Elige uno que tenga mínimo 500mg de EPA + DHA por cápsula. Guárdalo en nevera para evitar oxidación.</p>
+    </div>
+  </div>
+
+  <div class="supp">
+    <div class="supp-icon">☀️</div>
+    <div class="supp-body">
+      <h3>Vitamina D3</h3>
+      <p class="dose">1.000-2.000 UI al día (o según analítica)</p>
+      <p class="timing">📅 <strong>Cuándo:</strong> Con el desayuno o la comida, junto con grasa (para absorción).</p>
+      <p class="timing">💧 <strong>Cómo:</strong> Cápsulas o gotas. Tómalo con la comida que tenga algo de grasa (aguacate, frutos secos, aceite).</p>
+      <p class="note">💡 Ideal hacerse analítica para ver niveles. Especialmente importante en invierno y si entrenas de noche.</p>
+    </div>
+  </div>
+
+  <div class="supp">
+    <div class="supp-icon">🫐</div>
+    <div class="supp-body">
+      <h3>Arándano Rojo (Cranberry)</h3>
+      <p class="dose">Según indicación del producto (extracto o cápsulas)</p>
+      <p class="timing">📅 <strong>Cuándo:</strong> Una vez al día, por la mañana con el desayuno.</p>
+      <p class="timing">💧 <strong>Cómo:</strong> Cápsulas con agua. Si es extracto líquido, diluir en agua.</p>
+      <p class="note">💡 Beneficioso para salud urinaria. Tomar de forma continuada. Se puede combinar con la vitamina D en la misma toma.</p>
+    </div>
+  </div>
+
+  <div class="supp">
+    <div class="supp-icon">🔴</div>
+    <div class="supp-body">
+      <h3>Vitamina B12</h3>
+      <p class="dose">1.000 mcg al día (o 2.000 mcg 3 veces/semana)</p>
+      <p class="timing">📅 <strong>Cuándo:</strong> Por la mañana, en ayunas o con el desayuno.</p>
+      <p class="timing">💧 <strong>Cómo:</strong> Sublingual (debajo de la lengua) para mejor absorción, o cápsula con agua.</p>
+      <p class="note">💡 Esencial al reducir carne. La forma metilcobalamina o cianocobalamina son las más comunes. Sublingual es ideal.</p>
+    </div>
+  </div>
+
+  <div class="supp">
+    <div class="supp-icon">🧲</div>
+    <div class="supp-body">
+      <h3>Magnesio</h3>
+      <p class="dose">300-400mg al día (bisglicinato o citrato preferible)</p>
+      <p class="timing">📅 <strong>Cuándo:</strong> Por la noche, antes de dormir (ayuda a relajar y descansar).</p>
+      <p class="timing">💧 <strong>Cómo:</strong> Cápsulas o polvo disuelto en agua. Tomar lejos del calcio (no juntar con bebida de soja fortificada).</p>
+      <p class="note">💡 El bisglicinato es el mejor tolerado y no causa problemas digestivos. Ideal para recuperación muscular y sueño.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 Resumen Diario de Suplementos</h3>
+    <table class="macro-table">
+      <thead>
+        <tr>
+          <th>Momento</th>
+          <th>Suplementos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>🌅 Mañana<br><small>(desayuno)</small></td>
+          <td>Vitamina D3 + Arándano rojo + B12</td>
+        </tr>
+        <tr>
+          <td>🍽️ Comida</td>
+          <td>Omega-3 (con la comida principal)</td>
+        </tr>
+        <tr>
+          <td>💪 Post-entreno<br><small>(o desayuno)</small></td>
+          <td>Creatina (5g en batido o agua)</td>
+        </tr>
+        <tr>
+          <td>🌙 Noche<br><small>(antes de dormir)</small></td>
+          <td>Magnesio (bisglicinato)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box">
+    ⚠️ <strong>Importante:</strong> Los suplementos complementan la dieta, no la sustituyen. Consulta siempre con un profesional de la salud antes de comenzar cualquier suplementación. Hazte analíticas periódicas para ajustar dosis (especialmente vitamina D y B12).
+  </div>
+</div>
+
+</body>
+</html>
